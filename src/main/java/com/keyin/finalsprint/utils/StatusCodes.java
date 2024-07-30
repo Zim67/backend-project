@@ -26,6 +26,10 @@ public class StatusCodes {
         return create(HttpStatus.FORBIDDEN);
     }
 
+    public static <T> ResponseEntity<T> unauthorized() {
+        return create(HttpStatus.UNAUTHORIZED);
+    }
+
     public static <T> ResponseEntity<T> serverError() {
         return create(HttpStatus.INTERNAL_SERVER_ERROR);
     }

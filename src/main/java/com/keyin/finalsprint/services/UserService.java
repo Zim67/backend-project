@@ -17,16 +17,14 @@ public class UserService {
     }
 
     public User getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElse(null);
-        if (user == null) return null;
-        return user.toBasic();
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     public User loginWithEmailAndPassword(String email, String password) {
         User user = userRepository.findByEmail(email).orElse(null);
         if (user == null) return null;
         if (!user.isPassword(password)) return null;
-        return user.toBasic();
+        return user;
     }
 
     public User updateUser(long id, User.Updated updated) {
@@ -37,11 +35,17 @@ public class UserService {
         if (updated.lastName() != null) user.setLastName(updated.lastName());
         if (updated.password() != null && !user.setPassword(updated.password())) return null;
         if (updated.admin() != null) user.setAdmin(updated.admin());
-        return Optionull.map(userRepository.save(user), User::toBasic);
+        return userRepository.save(user);
     }
 
     public User addUser(User.Updated updated) {
         return userRepository.save(updated.asUser());
+    }
+
+    public String createSession(User user) {
+        String session = user.createSession();
+        userRepository.save(user);
+        return session;
     }
 
     public void deleteUser(long id) {

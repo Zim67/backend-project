@@ -3,10 +3,14 @@ package com.keyin.finalsprint.models;
 import com.keyin.finalsprint.utils.SecurityUtils;
 import jakarta.persistence.*;
 
+import java.time.Instant;
 import java.util.Base64;
+import java.util.Date;
 
 @Entity
 public class User {
+
+    private static final long SESSION_TIME = 60 * 60 * 24; // 1 day session time
 
     @Id
     @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1, initialValue = 1)
@@ -22,6 +26,10 @@ public class User {
     // Password
     private String hashedPassword;
     private String encodedSalt;
+
+    // Session Info
+    private Date sessionTime;
+    private String session;
 
     public User() {}
 
@@ -98,6 +106,18 @@ public class User {
         var salt = Base64.getDecoder().decode(this.encodedSalt);
         var hashedPassword = SecurityUtils.hash(password, salt, 128);
         return hashedPassword != null && hashedPassword.equals(this.hashedPassword);
+    }
+
+    public String createSession() {
+        this.sessionTime = new Date();
+        this.session = Base64.getEncoder().encodeToString(SecurityUtils.createSalt(128));
+        return this.session;
+    }
+
+    public boolean isSession(String session) {
+        if (this.sessionTime == null || this.session == null || this.session.isBlank()) return false;
+        if (Instant.now().getEpochSecond() - this.sessionTime.toInstant().getEpochSecond() > SESSION_TIME) return false;
+        return this.session.equals(session);
     }
 
     // Utility Methods

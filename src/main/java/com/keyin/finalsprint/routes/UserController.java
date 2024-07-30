@@ -2,6 +2,7 @@ package com.keyin.finalsprint.routes;
 
 import com.keyin.finalsprint.models.User;
 import com.keyin.finalsprint.routes.bodies.LoginBody;
+import com.keyin.finalsprint.routes.bodies.TokenResponse;
 import com.keyin.finalsprint.services.UserService;
 import com.keyin.finalsprint.utils.StatusCodes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +18,17 @@ public class UserController {
 
     @GetMapping("users/{id}")
     public ResponseEntity<User> get(@PathVariable Long id) {
-        return ResponseEntity.ofNullable(service.getUserById(id));
+        return ResponseEntity.ofNullable(service.getUserById(id).toBasic());
     }
 
     @PostMapping("users/login")
-    public ResponseEntity<Long> login(@RequestBody LoginBody body) {
+    public ResponseEntity<TokenResponse> login(@RequestBody LoginBody body) {
         User user = service.loginWithEmailAndPassword(body.email(), body.password());
         if (user == null) return StatusCodes.badRequest();
-        return ResponseEntity.ofNullable(user.getId());
+        return ResponseEntity.ofNullable(new TokenResponse(
+                user.getId(),
+                service.createSession(user)
+        ));
     }
 
     @PostMapping("users/create")
@@ -37,9 +41,11 @@ public class UserController {
     }
 
     @PutMapping("users/{id}/password")
-    public ResponseEntity<Void> password(@PathVariable Long id, @RequestBody String password) {
+    public ResponseEntity<Void> password(@PathVariable Long id, @RequestHeader("Authorization") String session, @RequestBody String password) {
         User user = service.updateUser(id, User.Updated.password(password));
-        return user == null ? StatusCodes.badRequest() : StatusCodes.created();
+        if (user == null) return StatusCodes.badRequest();
+        if (!user.isSession(session)) return StatusCodes.unauthorized();
+        return StatusCodes.created();
     }
 
 }
