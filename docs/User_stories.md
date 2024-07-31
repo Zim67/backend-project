@@ -23,3 +23,6 @@
 - **Acceptance Criteria:**
   1. Given the user has an account, when they enter their email and password, then they should be logged in.
   2. Given the user does not have an account, when they try to log in, then they should receive an error message.
+
+## User Story: Manage Airports
+**As an** admin, **I want** to manage airport data **so that** the system maintains up-to-date airport information.

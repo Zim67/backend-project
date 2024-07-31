@@ -25,3 +25,13 @@
 - Use the following command to start the application:
   ```bash
   ./mvnw spring-boot:run
+
+## Airports Feature
+This feature allows managing airports in the system.
+
+### Endpoints
+- **GET `/airports`**: Retrieves all airports.
+- **GET `/airports/search?name=`**: Searches for airports by name.
+- **POST `/airports`**: Adds a new airport.
+- **PUT `/airports/{id}`**: Updates an existing airport.
+- **DELETE `/airports/{id}`**: Deletes an airport by ID.
