@@ -43,4 +43,9 @@ public class AirportController {
     public ResponseEntity<List<Airport>> get() {
         return ResponseEntity.ofNullable(service.get());
     }
+
+    @GetMapping("airports/search")
+    public ResponseEntity<List<Airport>> search(@RequestParam(required = false, name = "name") String name) {
+        return ResponseEntity.ofNullable(service.find(name));
+    }
 }
