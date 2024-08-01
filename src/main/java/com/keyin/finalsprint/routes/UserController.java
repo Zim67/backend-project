@@ -23,12 +23,9 @@ public class UserController {
 
     @PostMapping("users/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginBody body) {
-        User user = service.loginWithEmailAndPassword(body.email(), body.password());
-        if (user == null) return StatusCodes.badRequest();
-        return ResponseEntity.ofNullable(new TokenResponse(
-                user.getId(),
-                service.createSession(user)
-        ));
+        TokenResponse response = service.login(body.email(), body.password());
+        if (response == null) return StatusCodes.badRequest();
+        return ResponseEntity.ofNullable(response);
     }
 
     @PostMapping("users/create")
@@ -36,13 +33,13 @@ public class UserController {
         if (!updated.isFull()) return StatusCodes.badRequest(); // Make sure that the request body has all values
         if (updated.admin()) return StatusCodes.forbidden(); // Make sure that an admin cant be created on registration
         if (service.getUserByEmail(updated.email()) != null) return StatusCodes.badRequest(); // Make sure the email doesn't already exist
-        if (service.addUser(updated) == null) return StatusCodes.badRequest();
+        if (service.add(updated) == null) return StatusCodes.badRequest();
         return StatusCodes.noContent();
     }
 
     @PutMapping("users/{id}/password")
     public ResponseEntity<Void> password(@PathVariable Long id, @RequestHeader("Authorization") String session, @RequestBody String password) {
-        User user = service.updateUser(id, User.Updated.password(password));
+        User user = service.update(id, User.Updated.password(password));
         if (user == null) return StatusCodes.badRequest();
         if (!user.isSession(session)) return StatusCodes.unauthorized();
         return StatusCodes.created();

@@ -13,13 +13,13 @@ public class AirportService {
     @Autowired
     private AirportRepository repository;
 
-    public Airport addAirport(Airport.Updated data) {
+    public Airport add(Airport.Updated data) {
         if (repository.findByCode(data.code()).isPresent()) return null;
         Airport airport = new Airport(data.code(), data.name(), data.city(), data.country());
         return repository.save(airport);
     }
 
-    public Airport updateAirport(long id, Airport.Updated data) {
+    public Airport update(long id, Airport.Updated data) {
         Airport airport = repository.findById(id).orElse(null);
         if (airport == null) return null;
         if (data.code() != null) airport.setCode(data.code());
@@ -29,8 +29,10 @@ public class AirportService {
         return repository.save(airport);
     }
 
-    public void deleteAirport(long id) {
+    public boolean delete(long id) {
+        if (repository.findById(id).isEmpty()) return false;
         repository.deleteById(id);
+        return true;
     }
 
     public List<Airport> get() {
