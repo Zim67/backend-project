@@ -24,3 +24,15 @@
 4. **PUT `/airports/{id}`**: Update an airport and check if the changes are applied.
 5. **DELETE `/airports/{id}`**: Delete an airport and confirm it's removed.
 
+## Testing Aircrafts Functionality
+
+### Unit Tests
+- Test the aircrafts service and repository classes to ensure correct data handling.
+
+### Manual Testing
+- **GET `/aircrafts`**: Verify it returns the correct list of aircrafts.
+- **GET `/aircrafts/search?airline=`**: Ensure the search returns correct results.
+- **POST `/aircrafts`**: Test adding a new aircraft with valid and invalid data.
+- **PUT `/aircrafts/{id}`**: Check if updates are applied correctly.
+- **DELETE `/aircrafts/{id}`**: Ensure aircrafts can be deleted and handle cases where the ID does not exist.
+
