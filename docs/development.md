@@ -35,3 +35,13 @@ This feature allows managing airports in the system.
 - **POST `/airports`**: Adds a new airport.
 - **PUT `/airports/{id}`**: Updates an existing airport.
 - **DELETE `/airports/{id}`**: Deletes an airport by ID.
+
+## Aircrafts Endpoints
+- **GET `/aircrafts`**: Retrieves all aircrafts.
+- **GET `/aircrafts/search?airline=`**: Searches for aircrafts by airline.
+- **POST `/aircrafts`**: Adds a new aircraft.
+- **PUT `/aircrafts/{id}`**: Updates an existing aircraft.
+- **DELETE `/aircrafts/{id}`**: Deletes an aircraft by ID.
+
+The code for the aircrafts functionality can be found in the `AircraftController`, `AircraftService`, and `AircraftRepository` classes.
+
