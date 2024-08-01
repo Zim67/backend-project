@@ -1,7 +1,7 @@
 # Project Setup
 
 ## Prerequisites
-- Java 17
+- Java 21
 - Maven
 - MySQL
 
