@@ -33,7 +33,6 @@ public class AircraftController {
 
     @GetMapping("aircrafts")
     public ResponseEntity<List<Aircraft>> get() {
-        System.out.println(service.get());
         return StatusCodes.with(service.get());
     }
 
