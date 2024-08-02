@@ -28,7 +28,7 @@ public abstract class UpdateableService<T extends Updateable<D>, D extends Updat
         if (id == null) return null;
         T value = get(id);
         if (value == null) return null;
-        if (value.update(data)) return null;
+        if (!value.update(data)) return null;
         return repository().save(value);
     }
 
