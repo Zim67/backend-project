@@ -19,7 +19,7 @@ public class AirportController {
     @PostMapping("airports/create")
     public ResponseEntity<Airport> create(@RequestBody Airport.Updated body) {
         if (!body.isFull()) return StatusCodes.badRequest();
-        Airport airport = service.addAirport(body);
+        Airport airport = service.add(body);
         if (airport == null) return StatusCodes.badRequest();
         return ResponseEntity.ofNullable(airport);
     }
@@ -27,15 +27,15 @@ public class AirportController {
     @PostMapping("airports/{id}")
     public ResponseEntity<Airport> update(@PathVariable Long id, @RequestBody Airport.Updated body) {
         if (id == null) return StatusCodes.badRequest();
-        Airport airport = service.updateAirport(id, body);
+        Airport airport = service.update(id, body);
         if (airport == null) return StatusCodes.badRequest();
         return ResponseEntity.ofNullable(airport);
     }
 
     @DeleteMapping("airports/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         if (id == null) return StatusCodes.badRequest();
-        service.deleteAirport(id);
+        if (!service.delete(id)) return StatusCodes.badRequest();
         return StatusCodes.noContent();
     }
 

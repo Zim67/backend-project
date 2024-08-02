@@ -2,7 +2,7 @@ package com.keyin.finalsprint.services;
 
 import com.keyin.finalsprint.models.User;
 import com.keyin.finalsprint.repositories.UserRepository;
-import com.keyin.finalsprint.utils.Optionull;
+import com.keyin.finalsprint.routes.bodies.TokenResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +20,15 @@ public class UserService {
         return userRepository.findByEmail(email).orElse(null);
     }
 
-    public User loginWithEmailAndPassword(String email, String password) {
+    public TokenResponse login(String email, String password) {
         User user = userRepository.findByEmail(email).orElse(null);
         if (user == null) return null;
         if (!user.isPassword(password)) return null;
-        return user;
+        String session = user.createSession();
+        return new TokenResponse(user.getId(), session);
     }
 
-    public User updateUser(long id, User.Updated updated) {
+    public User update(long id, User.Updated updated) {
         User user = getUserById(id);
         if (user == null) return null;
         if (updated.email() != null) user.setEmail(updated.email());
@@ -38,17 +39,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User addUser(User.Updated updated) {
+    public User add(User.Updated updated) {
         return userRepository.save(updated.asUser());
-    }
-
-    public String createSession(User user) {
-        String session = user.createSession();
-        userRepository.save(user);
-        return session;
-    }
-
-    public void deleteUser(long id) {
-        userRepository.deleteById(id);
     }
 }
