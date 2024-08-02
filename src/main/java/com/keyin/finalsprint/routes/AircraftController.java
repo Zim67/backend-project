@@ -17,36 +17,29 @@ public class AircraftController {
     private AircraftService service;
 
     @PostMapping("aircrafts/create")
-    public ResponseEntity<Aircraft> create(@RequestBody Aircraft.Updated body) {
-        if (!body.isFull()) return StatusCodes.badRequest();
-        Aircraft aircraft = service.add(body);
-        if (aircraft == null) return StatusCodes.badRequest();
-        return ResponseEntity.ofNullable(aircraft);
+    public ResponseEntity<Aircraft> create(@RequestBody Aircraft.Update body) {
+        return StatusCodes.with(service.add(body));
     }
 
     @PostMapping("aircrafts/{id}")
-    public ResponseEntity<Aircraft> update(@PathVariable Long id, @RequestBody Aircraft.Updated body) {
-        if (id == null) return StatusCodes.badRequest();
-        Aircraft aircraft = service.update(id, body);
-        if (aircraft == null) return StatusCodes.badRequest();
-        return ResponseEntity.ofNullable(aircraft);
+    public ResponseEntity<Aircraft> update(@PathVariable Long id, @RequestBody Aircraft.Update body) {
+        return StatusCodes.with(service.update(id, body));
     }
 
     @DeleteMapping("aircrafts/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (id == null) return StatusCodes.badRequest();
-        if (!service.delete(id)) return StatusCodes.badRequest();
-        return StatusCodes.noContent();
+        return !service.delete(id) ? StatusCodes.badRequest() : StatusCodes.noContent();
     }
 
     @GetMapping("aircrafts")
     public ResponseEntity<List<Aircraft>> get() {
-        return ResponseEntity.ofNullable(service.get());
+        System.out.println(service.get());
+        return StatusCodes.with(service.get());
     }
 
     @GetMapping("aircrafts/search")
     public ResponseEntity<List<Aircraft>> search(@RequestParam(required = false, name = "airline") String airline) {
-        return ResponseEntity.ofNullable(service.find(airline));
+        return StatusCodes.with(service.find(airline));
     }
 
 }

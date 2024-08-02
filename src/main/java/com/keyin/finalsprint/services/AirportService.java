@@ -2,41 +2,33 @@ package com.keyin.finalsprint.services;
 
 import com.keyin.finalsprint.models.Airport;
 import com.keyin.finalsprint.repositories.AirportRepository;
+import com.keyin.finalsprint.utils.UpdateableService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class AirportService {
+public class AirportService extends UpdateableService<Airport, Airport.Update> {
 
     @Autowired
     private AirportRepository repository;
 
-    public Airport add(Airport.Updated data) {
+    @Override
+    protected Airport create(Airport.Update data) {
+        return new Airport(data.code(), data.name(), data.city(), data.country());
+    }
+
+    @Override
+    protected ListCrudRepository<Airport, Long> repository() {
+        return this.repository;
+    }
+
+    @Override
+    public Airport add(Airport.Update data) {
         if (repository.findByCode(data.code()).isPresent()) return null;
-        Airport airport = new Airport(data.code(), data.name(), data.city(), data.country());
-        return repository.save(airport);
-    }
-
-    public Airport update(long id, Airport.Updated data) {
-        Airport airport = repository.findById(id).orElse(null);
-        if (airport == null) return null;
-        if (data.code() != null) airport.setCode(data.code());
-        if (data.name() != null) airport.setName(data.name());
-        if (data.city() != null) airport.setCity(data.city());
-        if (data.country() != null) airport.setCountry(data.country());
-        return repository.save(airport);
-    }
-
-    public boolean delete(long id) {
-        if (repository.findById(id).isEmpty()) return false;
-        repository.deleteById(id);
-        return true;
-    }
-
-    public List<Airport> get() {
-        return repository.findAll();
+        return super.add(data);
     }
 
     public List<Airport> find(String name) {

@@ -1,20 +1,27 @@
 package com.keyin.finalsprint.models;
 
 import com.keyin.finalsprint.utils.SecurityUtils;
+import com.keyin.finalsprint.utils.Updateable;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 
 @Entity
-public class User {
+@Getter
+@Setter
+@NoArgsConstructor
+public class User implements Updateable<User.Update> {
 
     private static final long SESSION_TIME = 60 * 60 * 24; // 1 day session time
 
     @Id
-    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sequence", allocationSize = 1, initialValue = 1)
-    @GeneratedValue(generator = "user_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     @Column(unique = true)
@@ -24,71 +31,35 @@ public class User {
     private boolean admin;
 
     // Password
-    private String hashedPassword;
-    private String encodedSalt;
+    @Getter(AccessLevel.NONE) private String hashedPassword;
+    @Getter(AccessLevel.NONE) private String encodedSalt;
 
     // Session Info
-    private Date sessionTime;
-    private String session;
-
-    public User() {}
+    @Getter(AccessLevel.NONE) private Date sessionTime;
+    @Getter(AccessLevel.NONE) private String session;
 
     private User(long id, String email, String firstName, String lastName, boolean admin) {
-        super();
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.admin = admin;
-        this.hashedPassword = null;
-        this.encodedSalt = null;
     }
 
     public User(String email, String firstName, String lastName, boolean admin, String password) {
-        super();
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.admin = admin;
+        this(0, email, firstName, lastName, admin);
         if (!this.setPassword(password)) {
             throw new RuntimeException("Failed to hash password for '" + email + "'");
         }
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String name) {
-        this.firstName = name;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
+    @Override
+    public boolean update(Update data) {
+        if (data.email != null) this.email = data.email;
+        if (data.firstName != null) this.firstName = data.firstName;
+        if (data.lastName != null) this.lastName = data.lastName;
+        if (data.admin != null) this.admin = data.admin;
+        return data.password == null || setPassword(data.password);
     }
 
     public boolean setPassword(String password) {
@@ -126,24 +97,17 @@ public class User {
         return new User(this.id, this.email, this.firstName, this.lastName, this.admin);
     }
 
-    public record Updated(
+    public record Update(
             String email,
             String firstName,
             String lastName,
             Boolean admin,
             String password
-    ) {
+    ) implements Updateable.UpdateData {
 
-        public static Updated password(String password) {
-            return new Updated(null, null, null, null, password);
-        }
-
-        public boolean isFull() {
+        @Override
+        public boolean isComplete() {
             return email != null && firstName != null && lastName != null && admin != null && password != null;
-        }
-
-        public User asUser() {
-            return new User(email, firstName, lastName, admin, password);
         }
     }
 }

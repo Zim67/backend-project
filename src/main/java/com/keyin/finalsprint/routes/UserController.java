@@ -18,31 +18,28 @@ public class UserController {
 
     @GetMapping("users/{id}")
     public ResponseEntity<User> get(@PathVariable Long id) {
-        return ResponseEntity.ofNullable(service.getUserById(id).toBasic());
+        User user = service.get(id);
+        if (user == null) return StatusCodes.notFound();
+        return StatusCodes.with(user.toBasic());
     }
 
     @PostMapping("users/login")
     public ResponseEntity<TokenResponse> login(@RequestBody LoginBody body) {
-        TokenResponse response = service.login(body.email(), body.password());
-        if (response == null) return StatusCodes.badRequest();
-        return ResponseEntity.ofNullable(response);
+        return StatusCodes.with(service.login(body.email(), body.password()));
     }
 
     @PostMapping("users/create")
-    public ResponseEntity<Void> create(@RequestBody User.Updated updated) {
-        if (!updated.isFull()) return StatusCodes.badRequest(); // Make sure that the request body has all values
-        if (updated.admin()) return StatusCodes.forbidden(); // Make sure that an admin cant be created on registration
-        if (service.getUserByEmail(updated.email()) != null) return StatusCodes.badRequest(); // Make sure the email doesn't already exist
-        if (service.add(updated) == null) return StatusCodes.badRequest();
-        return StatusCodes.noContent();
+    public ResponseEntity<User> create(@RequestBody User.Update data) {
+        return StatusCodes.with(service.add(data), User::toBasic);
     }
 
     @PutMapping("users/{id}/password")
-    public ResponseEntity<Void> password(@PathVariable Long id, @RequestHeader("Authorization") String session, @RequestBody String password) {
-        User user = service.update(id, User.Updated.password(password));
+    public ResponseEntity<User> password(@PathVariable Long id, @RequestHeader("Authorization") String session, @RequestBody String password) {
+        User user = service.get(id);
         if (user == null) return StatusCodes.badRequest();
         if (!user.isSession(session)) return StatusCodes.unauthorized();
-        return StatusCodes.created();
+        user = service.update(id, new User.Update(null, null, null, null, password));
+        return StatusCodes.with(user, User::toBasic);
     }
 
 }
