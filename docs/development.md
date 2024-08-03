@@ -45,3 +45,13 @@ This feature allows managing airports in the system.
 
 The code for the aircrafts functionality can be found in the `AircraftController`, `AircraftService`, and `AircraftRepository` classes.
 
+## Generic System of Updateables and UpdateData
+
+The project has been refactored to use a generic system based on `Updateables` and `UpdateData`. This change simplifies the logic and ensures consistency across service methods. The new `UpdateableService` class handles the generic update, delete, and add operations, allowing for easier maintenance and scalability.
+
+### Changes:
+- Introduced `Updateable` and `UpdateData` interfaces.
+- Simplified service methods to use the generic system.
+- Refactored existing entities to implement the new interfaces.
+
+
