@@ -36,3 +36,13 @@
 - **PUT `/aircrafts/{id}`**: Check if updates are applied correctly.
 - **DELETE `/aircrafts/{id}`**: Ensure aircrafts can be deleted and handle cases where the ID does not exist.
 
+## Testing with Generic System
+
+With the introduction of the generic system (`Updateables` and `UpdateData`), testing now includes validation for these generic methods. The tests ensure that all entities conform to the new structure and that the generic service methods operate correctly across different entity types.
+
+### Updated Tests:
+- New unit tests for `UpdateableService`.
+- Refactored existing tests to align with the generic system.
+- Added edge case tests for `UpdateData` validation.
+
+
