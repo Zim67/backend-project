@@ -1,27 +1,26 @@
 package com.keyin.finalsprint.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import com.keyin.finalsprint.utils.Updateable;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-public class Aircraft {
+@Getter
+@Setter
+@NoArgsConstructor
+public class Aircraft implements Updateable<Aircraft.Update> {
 
     @Id
-    @SequenceGenerator(name = "aircraft_sequence", sequenceName = "aircraft_sequence", allocationSize = 1)
-    @GeneratedValue(generator = "aircraft_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
-    private String registrationNumber;
-    private String manufacturer;
-    private String model;
+    protected String registrationNumber;
+    protected String manufacturer;
+    protected String model;
 
-    private String airline;
-
-    public Aircraft() {
-
-    }
+    protected String airline;
 
     public Aircraft(String registrationNumber, String manufacturer, String model, String airline) {
         this.registrationNumber = registrationNumber;
@@ -30,45 +29,19 @@ public class Aircraft {
         this.airline = airline;
     }
 
-    public long getId() {
-        return id;
+    @Override
+    public boolean update(Update data) {
+        if (data.registrationNumber != null) this.registrationNumber = data.registrationNumber;
+        if (data.manufacturer != null) this.manufacturer = data.manufacturer;
+        if (data.model != null) this.model = data.model;
+        if (data.airline != null) this.airline = data.airline;
+        return true;
     }
 
-    public String getRegistrationNumber() {
-        return registrationNumber;
-    }
+    public record Update(String registrationNumber, String manufacturer, String model, String airline) implements UpdateData {
 
-    public void setRegistrationNumber(String registrationNumber) {
-        this.registrationNumber = registrationNumber;
-    }
-
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getAirline() {
-        return airline;
-    }
-
-    public void setAirline(String airline) {
-        this.airline = airline;
-    }
-
-    public record Updated(String registrationNumber, String manufacturer, String model, String airline) {
-
-        public boolean isFull() {
+        @Override
+        public boolean isComplete() {
             return registrationNumber != null && manufacturer != null && model != null && airline != null;
         }
     }

@@ -17,35 +17,27 @@ public class AirportController {
     private AirportService service;
 
     @PostMapping("airports/create")
-    public ResponseEntity<Airport> create(@RequestBody Airport.Updated body) {
-        if (!body.isFull()) return StatusCodes.badRequest();
-        Airport airport = service.add(body);
-        if (airport == null) return StatusCodes.badRequest();
-        return ResponseEntity.ofNullable(airport);
+    public ResponseEntity<Airport> create(@RequestBody Airport.Update body) {
+        return StatusCodes.with(service.add(body));
     }
 
     @PostMapping("airports/{id}")
-    public ResponseEntity<Airport> update(@PathVariable Long id, @RequestBody Airport.Updated body) {
-        if (id == null) return StatusCodes.badRequest();
-        Airport airport = service.update(id, body);
-        if (airport == null) return StatusCodes.badRequest();
-        return ResponseEntity.ofNullable(airport);
+    public ResponseEntity<Airport> update(@PathVariable Long id, @RequestBody Airport.Update body) {
+        return StatusCodes.with(service.update(id, body));
     }
 
     @DeleteMapping("airports/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        if (id == null) return StatusCodes.badRequest();
-        if (!service.delete(id)) return StatusCodes.badRequest();
-        return StatusCodes.noContent();
+        return !service.delete(id) ? StatusCodes.badRequest() : StatusCodes.noContent();
     }
 
     @GetMapping("airports")
     public ResponseEntity<List<Airport>> get() {
-        return ResponseEntity.ofNullable(service.get());
+        return StatusCodes.with(service.get());
     }
 
     @GetMapping("airports/search")
     public ResponseEntity<List<Airport>> search(@RequestParam(required = false, name = "name") String name) {
-        return ResponseEntity.ofNullable(service.find(name));
+        return StatusCodes.with(service.find(name));
     }
 }

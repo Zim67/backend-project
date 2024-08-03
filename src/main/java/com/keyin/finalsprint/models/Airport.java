@@ -1,16 +1,19 @@
 package com.keyin.finalsprint.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import com.keyin.finalsprint.utils.Updateable;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-public class Airport {
+@Getter
+@Setter
+@NoArgsConstructor
+public class Airport implements Updateable<Airport.Update> {
 
     @Id
-    @SequenceGenerator(name = "airport_sequence", sequenceName = "airport_sequence", allocationSize = 1)
-    @GeneratedValue(generator = "airport_sequence")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
 
     private String code;
@@ -18,57 +21,28 @@ public class Airport {
     private String city;
     private String country;
 
-    public Airport() {
-
-    }
-
     public Airport(String code, String name, String city, String country) {
-        this();
         this.code = code;
         this.name = name;
         this.city = city;
         this.country = country;
     }
 
-    public long getId() {
-        return id;
+    @Override
+    public boolean update(Airport.Update data) {
+        if (data.code != null) this.code = data.code;
+        if (data.name != null) this.name = data.name;
+        if (data.city != null) this.city = data.city;
+        if (data.country != null) this.country = data.country;
+        return true;
     }
 
-    public String getCode() {
-        return code;
-    }
+    public record Update(
+            String code, String name, String city, String country
+    ) implements UpdateData {
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public record Updated(String code, String name, String city, String country) {
-
-        public boolean isFull() {
+        @Override
+        public boolean isComplete() {
             return code != null && name != null && city != null && country != null;
         }
     }
