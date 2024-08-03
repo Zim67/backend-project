@@ -26,3 +26,16 @@
 
 ## User Story: Manage Airports
 **As an** admin, **I want** to manage airport data **so that** the system maintains up-to-date airport information.
+
+## Updated User Stories
+
+The introduction of the generic system impacts the following user stories:
+
+### Story: As a developer, I want a consistent method for updating entities.
+- Implemented the `UpdateableService` to streamline entity updates.
+- Reduced redundancy and improved code readability.
+- Ensured all entities are handled uniformly, reducing the learning curve for new developers.
+
+### Story: As a user, I want reliable and consistent behavior across the application.
+- The generic system ensures consistent updates, additions, and deletions, improving overall user experience.
+
