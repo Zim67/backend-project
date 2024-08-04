@@ -39,3 +39,10 @@ The introduction of the generic system impacts the following user stories:
 ### Story: As a user, I want reliable and consistent behavior across the application.
 - The generic system ensures consistent updates, additions, and deletions, improving overall user experience.
 
+# User Stories
+
+## Flights Management
+- **As an admin,** I want to create and manage flights so that I can keep the system updated with current flight information.
+- **As a user,** I want to view all flights so that I can see available options.
+
+
