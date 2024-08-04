@@ -54,4 +54,16 @@ The project has been refactored to use a generic system based on `Updateables` a
 - Simplified service methods to use the generic system.
 - Refactored existing entities to implement the new interfaces.
 
+# Development Guide
+
+## New Features
+### Flights Endpoint
+The flights feature has been added, which allows for the creation, updating, and deletion of flights. The following endpoints are included:
+
+- **GET /flights:** Returns all flights.
+- **POST /flights/create:** Creates a new flight with specified aircraft, to/from airports, gates, and arrival/departure times.
+- **POST /flights/{id}:** Updates an existing flight.
+- **DELETE /flights/{id}:** Deletes a specific flight.
+
+
 
