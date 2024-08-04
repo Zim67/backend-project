@@ -45,4 +45,14 @@ With the introduction of the generic system (`Updateables` and `UpdateData`), te
 - Refactored existing tests to align with the generic system.
 - Added edge case tests for `UpdateData` validation.
 
+# Testing Guide
+
+## Flights Feature Testing
+- **GET /flights:** Test to ensure all flights are returned correctly.
+- **POST /flights/create:** Validate the creation of flights with all required fields.
+- **POST /flights/{id}:** Test updating of flight details.
+- **DELETE /flights/{id}:** Ensure deletion of flights works as expected.
+
+### Unit Tests
+- Added unit tests for the Flights service and controller to verify business logic and HTTP request handling.
 
