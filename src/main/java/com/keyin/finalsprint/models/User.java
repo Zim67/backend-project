@@ -97,6 +97,11 @@ public class User implements Updateable<User.Update> {
         return new User(this.id, this.email, this.firstName, this.lastName, this.admin);
     }
 
+    public long getId() {
+        return this.id;
+    }
+
+
     public record Update(
             String email,
             String firstName,

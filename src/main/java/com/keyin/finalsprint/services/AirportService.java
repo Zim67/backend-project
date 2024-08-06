@@ -8,6 +8,7 @@ import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AirportService extends UpdateableService<Airport, Airport.Update> {
@@ -29,6 +30,10 @@ public class AirportService extends UpdateableService<Airport, Airport.Update> {
     public Airport add(Airport.Update data) {
         if (repository.findByCode(data.code()).isPresent()) return null;
         return super.add(data);
+    }
+
+    public Optional<Airport> findById(Long id) {
+        return repository.findById(id);
     }
 
     public List<Airport> find(String name) {
