@@ -46,4 +46,8 @@ public class Airport implements Updateable<Airport.Update> {
             return code != null && name != null && city != null && country != null;
         }
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }
