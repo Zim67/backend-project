@@ -8,7 +8,6 @@ import com.keyin.finalsprint.services.AirportService;
 import com.keyin.finalsprint.services.FlightService;
 import com.keyin.finalsprint.utils.StatusCodes;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,17 +40,18 @@ public class FlightController {
     public ResponseEntity<List<Flight>> get() {
         return StatusCodes.with(service.get());
     }
+
     @GetMapping("flights/arrivals/{airportId}")
     public ResponseEntity<List<Flight>> getArrivalsAtAirport(@PathVariable Long airportId) {
-        Airport airport = airports.findById(airportId).orElseThrow(() -> new ResourceNotFoundException("Airport not found"));
-        List<Flight> flights = service.getArrivalsAtAirport(airport);
-        return StatusCodes.with(flights);
+        Airport airport = airports.get(airportId);
+        if (airport == null) return StatusCodes.notFound();
+        return StatusCodes.with(service.getArrivalsAtAirport(airport));
     }
 
     @GetMapping("flights/departures/{airportId}")
     public ResponseEntity<List<Flight>> getDeparturesFromAirport(@PathVariable Long airportId) {
-        Airport airport = airports.findById(airportId).orElseThrow(() -> new ResourceNotFoundException("Airport not found"));
-        List<Flight> flights = service.getDeparturesFromAirport(airport);
-        return StatusCodes.with(flights);
+        Airport airport = airports.get(airportId);
+        if (airport == null) return StatusCodes.notFound();
+        return StatusCodes.with(service.getDeparturesFromAirport(airport));
     }
 }
