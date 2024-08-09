@@ -1,7 +1,11 @@
 package com.keyin.finalsprint.models;
 
 import com.keyin.finalsprint.utils.Updateable;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +23,6 @@ public class Aircraft implements Updateable<Aircraft.Update> {
     protected String registrationNumber;
     protected String manufacturer;
     protected String model;
-
     protected String airline;
 
     public Aircraft(String registrationNumber, String manufacturer, String model, String airline) {
@@ -38,7 +41,7 @@ public class Aircraft implements Updateable<Aircraft.Update> {
         return true;
     }
 
-    public record Update(String registrationNumber, String manufacturer, String model, String airline) implements UpdateData {
+    public record Update(String registrationNumber, String manufacturer, String model, String airline) implements Updateable.UpdateData {
 
         @Override
         public boolean isComplete() {

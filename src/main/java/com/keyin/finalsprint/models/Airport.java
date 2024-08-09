@@ -1,7 +1,11 @@
 package com.keyin.finalsprint.models;
 
 import com.keyin.finalsprint.utils.Updateable;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -39,7 +43,7 @@ public class Airport implements Updateable<Airport.Update> {
 
     public record Update(
             String code, String name, String city, String country
-    ) implements UpdateData {
+    ) implements Updateable.UpdateData {
 
         @Override
         public boolean isComplete() {
