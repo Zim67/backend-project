@@ -64,17 +64,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Spring Security for Password Hashing -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <!-- Spring Security Crypto for Password Encoding -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
